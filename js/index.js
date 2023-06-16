@@ -136,6 +136,47 @@ function hideFullTime() {
     document.getElementById('fullTimeScreen').style.display = 'none';
 }
 
-function updateWeather() {
-    
+window.addEventListener('load', () => {
+  const ipAddressElement = document.getElementById('ipAddress');
+  getIPAddress()
+    .then(ipAddress => {
+      ipAddressElement.textContent = ipAddress;
+    })
+    .catch(error => {
+      console.error(error);
+      ipAddressElement.textContent = 'Failed to fetch IP address';
+    });
+});
+
+function getIPAddress() {
+  return new Promise((resolve, reject) => {
+    const RTCPeerConnection = window.RTCPeerConnection || window.webkitRTCPeerConnection || window.mozRTCPeerConnection;
+    if (!RTCPeerConnection) {
+      reject(new Error('Your browser does not support RTCPeerConnection'));
+    }
+
+    const pc = new RTCPeerConnection();
+    pc.createDataChannel('');
+    pc.createOffer()
+      .then(offer => pc.setLocalDescription(offer))
+      .catch(error => reject(error));
+
+    pc.onicecandidate = event => {
+  if (event.candidate) {
+    const ipRegex = /([0-9]{1,3}\.){3}[0-9]{1,3}/;
+    const ipAddressMatch = ipRegex.exec(event.candidate.candidate);
+    if (ipAddressMatch) {
+      const ipAddress = ipAddressMatch[0];
+      resolve(ipAddress);
+      pc.onicecandidate = null;
+    } else {
+      alert('Failed to extract IP address from candidate');
+    }
   }
+};
+  });
+}
+
+window.onerror = function(message, source, lineno, colno, error) {
+  alert(`Error: ${message}\nSource: ${source}\nLine: ${lineno}\nColumn: ${colno}`);
+};
