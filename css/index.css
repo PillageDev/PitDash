@@ -1,0 +1,221 @@
+@import url('https://fonts.googleapis.com/css2?family=Tilt+Prism&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bubblegum+Sans&display=swap');
+
+#homescreen {
+    /* background-image: url('../images/hsbackground.jpg'); */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#time {
+    position: absolute;
+    top: 5%;
+    right: 5%;
+    font-size: 5em;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: #333333;
+    z-index: 100;
+    font-weight: lighter;
+    font-family: 'Tilt Prism', sans-serif;
+    transition: all 0.5s ease-in-out;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+  }
+
+#date {
+    position: absolute;
+    bottom: 5%;
+    right: 5%;
+    font-size: 3.5em;
+    color: #333333;
+    padding-left: 10px;
+    padding-right: 10px;
+    z-index: 100;
+    font-weight: lighter;
+    font-family: 'Tilt Prism', sans-serif;
+    transition: all 0.5s ease-in-out;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+}
+
+#date:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+  }
+  
+#date:hover h1 {
+    font-size: 3em;
+    cursor: pointer;
+}
+
+#weather {
+    position: absolute;
+    top: 5%;
+    left: 5%;
+    font-size: 3.5em;
+    color: #333333;
+    padding-left: 10px;
+    padding-right: 10px;
+    z-index: 100;
+    font-weight: lighter;
+    font-family: 'Tilt Prism', sans-serif;
+    transition: all 0.5s ease-in-out;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+}
+
+#clock {
+    position: absolute;
+    top: 50%;
+    left: 25%;
+    transform: translate(-50%, -50%);
+    width: 30em;
+    height: 30em;
+    border-radius: 50%;
+    background-color: #ffffff;
+    box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.1), 0 0 0.5em rgba(0, 0, 0, 0.1), 0 0 0.5em rgba(0, 0, 0, 0.1), 0 0 0.5em rgba(0, 0, 0, 0.1);
+    z-index: 100;
+}
+
+
+#hour-hand, #minute-hand, #second-hand {
+    position: absolute;
+    transform-origin: bottom center; 
+    background-color: #333333;
+    box-shadow: 0 0.2em 0.2em rgba(0, 0, 0, 0.1);
+    z-index: 200;
+    transition: transform 0.1s ease-in-out;
+}
+
+#hour-hand {
+    top: 50%;
+    left: 50%;
+    width: 0.4em;
+    height: 5em;
+    border-radius: 0.2em;
+    transform: rotate(0deg);
+    margin-top: -5em; 
+}
+
+#minute-hand {
+    top: 50%;
+    left: 50%;
+    width: 0.3em;
+    height: 7.5em;
+    border-radius: 0.2em;
+    transform: rotate(0deg);
+    margin-top: -7.5em; 
+}
+
+#second-hand {
+    top: 50%;
+    left: 50%;
+    width: 0.2em;
+    height: 10em;
+    border-radius: 0.2em;
+    transform: rotate(0deg);
+    margin-top: -10em; 
+}
+
+#center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 0.5em;
+    height: 0.5em;
+    border-radius: 50%;
+    background-color: #333333;
+    box-shadow: 0 0.2em 0.2em rgba(0, 0, 0, 0.1);
+    z-index: 300;
+}
+
+#fullScreenTimeCalendar {
+    display: none;
+}
+
+#calendar {
+    position: absolute;
+    width: 30em;
+    top: 25%;
+    left: 60%;
+    border: 1px solid #ccc;
+    padding: 10px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .month {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .weekdays {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  
+  .weekdays div {
+    width: calc(100% / 7);
+    text-align: center;
+  }
+  
+  .days {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .days div {
+    width: calc(100% / 7);
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    border: 1px solid #ccc;
+  }
+
+#fullTimeScreen {
+    display: none;
+}
+
+#fullTime {
+    width: 100%;
+    position: absolute;
+    text-align: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 15em;
+    color: #333333;
+    z-index: 100;
+    font-weight: lighter;
+    font-family: 'Bubblegum Sans', cursive;
+  }
+  
+  #fullTime span {
+    display: inline-block;
+  }
+  
+  #fullTime .hour {
+    transform: rotate(5deg);
+  }
+  
+  #fullTime .minute {
+    transform: rotate(-5deg) translateY(-10%);
+  }
+
+  #fullTime .second {
+    transform: rotate(5deg) translateY(5%);
+  }
+
+  #fullTime .ampm {
+    transform: rotate(-5deg) translateY(-5%);
+  }
+
