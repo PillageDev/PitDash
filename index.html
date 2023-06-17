@@ -3,10 +3,12 @@
     <head>
         <link rel="stylesheet" href="css/default.css">
         <link rel="stylesheet" href="css/index.css">
-
-        <script src="js/index.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script type="module" src="js/index.js"></script>
     </head>
     <body>
+        <div id="nextScreen">></div>
+
         <div id="homescreen">
             <div id="time">Time loading...</div>
             <div id="date">Date loading...</div>
@@ -16,8 +18,61 @@
         <div id="fullTimeScreen">
             <div id="fullTime">Time loading...</div>
         </div>
+        
 
         <div id="fullScreenTimeCalendar">
+            <div class="fullScreenDayView">
+                <div class="fsDayViewClose">❌</div>
+                <div class="fsDayViewTitle">Day View (Add date)</div>
+                <div class="hourColumn">
+                    <hr><h1>12:00 AM</h1><hr>
+                    <h1>1:00 AM</h1><hr>
+                    <h1>2:00 AM</h1><hr>
+                    <h1>3:00 AM</h1><hr>
+                    <h1>4:00 AM</h1><hr>
+                    <h1>5:00 AM</h1><hr>
+                    <h1>6:00 AM</h1><hr>
+                    <h1>7:00 AM</h1><hr>
+                    <h1>8:00 AM</h1><hr>
+                    <h1>9:00 AM</h1><hr>
+                    <h1>10:00 AM</h1><hr>
+                    <h1>11:00 AM</h1><hr>
+                    <h1>12:00 PM</h1><hr>
+                    <h1>1:00 PM</h1><hr>
+                    <h1>2:00 PM</h1><hr>
+                    <h1>3:00 PM</h1><hr>
+                    <h1>4:00 PM</h1><hr>
+                    <h1>5:00 PM</h1><hr>
+                    <h1>6:00 PM</h1><hr>
+                    <h1>7:00 PM</h1><hr>
+                    <h1>8:00 PM</h1><hr>
+                    <h1>9:00 PM</h1><hr>
+                    <h1>10:00 PM</h1><hr>
+                    <h1>11:00 PM</h1><hr>
+                </div>
+                <div class="eventsColumn"></div>
+
+                <div class="fsDayViewMinimize">➖</div>
+
+            </div>
+            <div class="editEventsPopup">
+                <div class="closeEditEvents">❌</div>
+                <div class="editEventsTitle">Edit Event</div>
+                <div class="inputs">
+                    <input type="text" id="editEventDate" class="eventInput" placeholder="Day #">
+                    <input type="text" id="editEventName" class="eventInput" placeholder="Name">
+                    <input type="text" id="editEventHour" class="eventInput" placeholder="Hour">
+                    <input type="text" id="editEventMinute" class="eventInput" placeholder="Minute">
+                    <input type="text" id="editEventAmPm" class="eventInput" placeholder="AM / PM">
+                    <input type="text" id="editEventDescription" class="eventInput" placeholder="Description">
+                    <button id="addEventButton">Add Event</button>
+                </div>
+            </div>
+            <div class="events">
+                <div class="expandDay">➕</div>
+                <div class="closeButton">❌</div>
+            </div>
+
             <div id="clock">
                 <div id="hour-hand"></div>
                 <div id="minute-hand"></div>
@@ -25,19 +80,24 @@
                 <div id="center"></div>
             </div>
 
-            <div id="calendar">
-                <div class="month"></div>
-                <div class="weekdays">
-                  <div>S</div>
-                  <div>M</div>
-                  <div>T</div>
-                  <div>W</div>
-                  <div>T</div>
-                  <div>F</div>
-                  <div>S</div>
+            <div class="calendar-container">
+                <div class="top">
+                  <div class="monthName"></div>
+                  <div class="year"></div>
+                  <div class="editEvents">⚙️</div>
                 </div>
-                <div class="days"></div>
+                <div class="weekdays">
+                  <div class="weekday">S</div>
+                  <div class="weekday">M</div>
+                  <div class="weekday">T</div>
+                  <div class="weekday">W</div>
+                  <div class="weekday">T</div>
+                  <div class="weekday">F</div>
+                  <div class="weekday">S</div>
+                </div>
+                <div id="calendar"></div>
               </div>
+                
         </div>
     </div>
 </body>

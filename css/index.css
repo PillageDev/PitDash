@@ -1,8 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Tilt+Prism&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Bubblegum+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
 #homescreen {
     /* background-image: url('../images/hsbackground.jpg'); */
+    display: flex;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -98,30 +100,30 @@
     top: 50%;
     left: 50%;
     width: 0.4em;
-    height: 5em;
+    height: 10em;
     border-radius: 0.2em;
     transform: rotate(0deg);
-    margin-top: -5em; 
+    margin-top: -10em; 
 }
 
 #minute-hand {
     top: 50%;
     left: 50%;
     width: 0.3em;
-    height: 7.5em;
+    height: 12.5em;
     border-radius: 0.2em;
     transform: rotate(0deg);
-    margin-top: -7.5em; 
+    margin-top: -12.5em; 
 }
 
 #second-hand {
     top: 50%;
     left: 50%;
     width: 0.2em;
-    height: 10em;
+    height: 14em;
     border-radius: 0.2em;
     transform: rotate(0deg);
-    margin-top: -10em; 
+    margin-top: -14em; 
 }
 
 #center {
@@ -129,8 +131,8 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 0.5em;
-    height: 0.5em;
+    width: 1em;
+    height: 1em;
     border-radius: 50%;
     background-color: #333333;
     box-shadow: 0 0.2em 0.2em rgba(0, 0, 0, 0.1);
@@ -141,45 +143,266 @@
     display: none;
 }
 
+.calendar-container {
+  max-width: 400px;
+  margin: 0 auto;
+  position: absolute;
+  top: 30%;
+  left: 60%;
+}
+
+.weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.weekday {
+  font-weight: bold;
+  font-family: 'Roboto', sans-serif;
+}
+
 #calendar {
-    position: absolute;
-    width: 30em;
-    top: 25%;
-    left: 60%;
-    border: 1px solid #ccc;
-    padding: 10px;
-    font-family: Arial, sans-serif;
-  }
-  
-  .month {
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
-  
-  .weekdays {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-  }
-  
-  .weekdays div {
-    width: calc(100% / 7);
-    text-align: center;
-  }
-  
-  .days {
-    display: flex;
-    flex-wrap: wrap;
-  }
-  
-  .days div {
-    width: calc(100% / 7);
-    height: 30px;
-    line-height: 30px;
-    text-align: center;
-    border: 1px solid #ccc;
-  }
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+}
+
+.day {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: center;
+  border-radius: 50%;
+  font-family: 'Roboto', sans-serif;
+  border: none;
+}
+
+.day:hover {
+  cursor: pointer;
+  background-color: lightgray;
+}
+
+.empty-day {
+  visibility: hidden;
+}
+
+
+.current-day {
+  background-color: #fe3a30;
+}
+
+.current-day:hover {
+  background-color: darkred;
+  cursor: pointer;
+}
+
+.event {
+  background-color: #f00;
+  color: #fff;
+}
+
+.top {
+  display: flex;
+  justify-content: left;
+  margin-bottom: 15px;
+  font-weight: bold;
+  z-index: 1005;
+  font-size: 1.25em;
+  font-family: 'Roboto', sans-serif;
+  padding-left: 0.5vw;
+}
+
+.year {
+  padding-left: 10px;
+  color: #333333;
+}
+
+.monthName {
+  color: #d4362c;
+}
+
+.editEvents {
+  display: flex;
+  justify-content: left;
+  font-weight: bold;
+  text-align: center;
+  z-index: 1000;
+  font-size: 1em;
+  font-family: 'Roboto', sans-serif;
+  padding-left: 0.5vw;
+  transition: all 0.5s ease-in-out;
+}
+
+.editEvents:hover {
+  cursor: pointer;
+  transform: rotate(360deg);
+  transition: all 0.5s ease-in-out;
+}
+
+.closeButton {
+  position: absolute;
+  top: 2.5%;
+  right: 2.5%;
+  display: flex;
+  justify-content: left;
+  font-weight: bold;
+  text-align: center;
+  z-index: 1005;
+  font-size: 1em;
+  font-family: 'Roboto', sans-serif;
+  padding-left: 0.5vw;
+  transition: all 0.5s ease-in-out;
+  color: red;
+}
+
+.expandDay {
+  position: absolute;
+  top: 2.5%;
+  left: 2.5%;
+  transition: all 0.5s ease-in-out;
+}
+
+.expandDay:hover {
+  cursor: pointer;
+  transform: rotate(360deg);
+  transition: all 0.5s ease-in-out;
+
+}
+
+.closeButton:hover {
+  cursor: pointer;
+  transform: rotate(360deg);
+  transition: all 0.5s ease-in-out;
+}
+
+.editEventsPopup {
+  display: none;
+  flex-direction: column;
+  justify-content: left;
+  align-items: left;
+  width: 50vw;
+  height: 75vh;
+  background: #ccc;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1001;
+  border-radius: 5%;
+  font-size: 1.5em;
+  font-family: 'Roboto', sans-serif;
+}
+
+.inputs {
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 20%;
+  width: 100%;
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+}
+
+.eventInput {
+  width: 50%;
+  margin-bottom: 2%;
+  border-radius: 10px;
+  height: 1em;
+  font-size: 1.5em;
+  transition: all 0.5s ease-in-out;
+}
+
+.eventInput:hover {
+  cursor: pointer;
+  transition: all 0.5s ease-in-out;
+  width: 52.5%;
+  height: 1.25em;
+}
+
+#addEventButton {
+  width: 50%;
+  height: 5vh;
+  font-size: 1.5em;
+  font-family: 'Roboto', sans-serif;
+  border-radius: 10px;
+  margin-bottom: 2%;
+  background-color: #d4362c;
+  color: #fff;
+  border: none;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  transition: all 0.5s ease-in-out;
+}
+
+#addEventButton:hover {
+  transition: all 0.5s ease-in-out;
+  cursor: pointer;
+  width: 52.5%;
+  height: 6vh;
+}
+
+.editEventsTitle {
+  position: absolute;
+  top: 2.5%;
+  margin-bottom: 2%;
+  font-size: 2em;
+  font-family: 'Roboto', sans-serif;
+  color: #333333;
+  z-index: 1005;
+  text-align: center;
+  width: 100%;
+}
+
+.closeEditEvents {
+  position: absolute;
+  top: 2.5%;
+  right: 2.5%;
+  display: flex;
+  justify-content: left;
+  font-weight: bold;
+  text-align: center;
+  z-index: 1006;
+  font-size: 1em;
+  font-family: 'Roboto', sans-serif;
+  padding-left: 0.5vw;
+  transition: all 0.5s ease-in-out;
+  color: red;
+}
+
+.closeEditEvents:hover {
+  cursor: pointer;
+  transform: rotate(360deg);
+  transition: all 0.5s ease-in-out;
+}
+
+.events {
+  display: none;
+  flex-direction: column;
+  padding-left: 2%;
+  justify-content: left;
+  align-items: left;
+  width: 25vw;
+  height: 25vw;
+  background: #ccc;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  border-radius: 5%;
+  font-size: 1.5em;
+  font-family: 'Roboto', sans-serif;
+}
+
+.events span[id="eventTitle"] {
+  padding-top: 5px;
+  text-align: center;
+  margin-bottom: 5px;
+}
 
 #fullTimeScreen {
     display: none;
@@ -217,5 +440,125 @@
 
   #fullTime .ampm {
     transform: rotate(-5deg) translateY(-5%);
+    padding-left: 10px;
   }
 
+  #nextScreen {
+    text-align: center;
+    position: absolute;
+    right: 0%;
+    bottom: 0%;
+    height: 100vh;
+    font-size: 5em;
+    font-family: Tilt Prism, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: 1vw;
+    padding-right: 1vw;
+    text-shadow: 0 0 12px rgba(0, 0, 0, 0.6);
+    z-index: 101;
+  }
+
+  #nextScreen:hover {
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    text-shadow: 0 0 14px rgba(0, 0, 0, 1);
+  }
+
+  .fullScreenDayView {
+    width: 100vw;
+    height: 100%;
+    min-height: 100vh;
+    background-color: #fff; 
+    z-index: 2000;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* display: none; */
+  }
+
+  .fsDayViewClose {
+    position: absolute;
+    top: 2.5%;
+    right: 2.5%;
+    display: flex;
+    justify-content: left;
+    font-weight: bold;
+    text-align: center;
+    z-index: 1006;
+    font-size: 1em;
+    font-family: 'Roboto', sans-serif;
+    padding-left: 0.5vw;
+    transition: all 0.5s ease-in-out;
+    color: red;
+  }
+
+  .fsDayViewClose:hover {
+    cursor: pointer;
+    transform: rotate(360deg);
+    transition: all 0.5s ease-in-out;
+  }
+
+  .fsDayViewMinimize {
+    position: absolute;
+    top: 2.5%;
+    left: 2.5%;
+    display: flex;
+    justify-content: left;
+    font-weight: bold;
+    text-align: center;
+    z-index: 1006;
+    font-size: 1em;
+    font-family: 'Roboto', sans-serif;
+    padding-left: 0.5vw;
+    transition: all 0.5s ease-in-out;
+    color: #333333;
+  }
+
+  .fsDayViewMinimize:hover {
+    cursor: pointer;
+    transform: rotate(360deg);
+    transition: all 0.5s ease-in-out;
+  }
+
+  .fsDayViewTitle {
+    position: absolute;
+    top: 2.5%;
+    margin-bottom: 2%;
+    font-size: 2em;
+    font-family: 'Roboto', sans-serif;
+    color: #333333;
+    z-index: 1005;
+    text-align: center;
+    width: 100%;
+  }
+
+  .hourColumn {
+    margin-top: 10%;
+    width: 20vw;
+    height: 100%;
+    margin-left: 2.5%;
+    display:block;
+  }
+
+  .hourColumn h1 {
+    margin-bottom: 10vh;
+  }
+
+  .eventsColumn {
+    display: flex;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    position: absolute;
+    margin-top: 10%;
+    width: calc(100% - 22.5vw); 
+    height: 100vh;
+    min-height: 100vh;
+    margin-left: 2.5%;
+    background: #000;
+    z-index: 1005;
+    overflow-y: auto;
+  }

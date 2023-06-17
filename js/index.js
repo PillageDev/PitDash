@@ -3,13 +3,13 @@ function updateTime() {
   let hours = today.getHours();
   let minutes = today.getMinutes();
   let seconds = today.getSeconds();
-  let ampm = hours >= 12 ? 'PM' : 'AM';
+  let ampm = hours >= 12 ? ' PM' : ' AM';
   hours = hours % 12;
   hours = hours ? hours : 12;
   minutes = minutes < 10 ? '0' + minutes : minutes;
   seconds = seconds < 10 ? '0' + seconds : seconds; 
   let time = hours + ':' + minutes + ':' + seconds + ' ' + ampm;
-  let fstime = '<span class="hour">' + hours + '</span>:<span class="minute">' + minutes + '</span>:<span class="second">' + seconds + '</span>:<span class="ampm">' + ampm + '</span>';
+  let fstime = '<span class="hour">' + hours + '</span>:<span class="minute">' + minutes + '</span>:<span class="second">' + seconds + '</span><span class="ampm">' + ' ' + ampm + '</span>';
   document.getElementById('time').innerHTML = time;
   document.getElementById('fullTime').innerHTML = fstime;
 }
@@ -50,81 +50,244 @@ function hideCalendar() {
 }
 
 function showHomescreen() {
-    document.getElementById('homescreen').style.display = 'block';
+    document.getElementById('homescreen').style.display = 'flex';
     hideCalendar();
+    hideFullTime();
 }
 
 function hideHomescreen() {
     document.getElementById('homescreen').style.display = 'none';
 }
 
-function createCalendar(month, year) {
-    let daysInMonth = new Date(year, month + 1, 0).getDate();
-    let firstDayOfMonth = new Date(year, month, 1).getDay();
-    let lastDayOfMonth = new Date(year, month, daysInMonth).getDay();
-    let daysInLastMonth = new Date(year, month, 0).getDate();
-    let daysInNextMonth = 1;
-    let calendarDays = [];
-  
-    // Add days from last month
-    for (let i = firstDayOfMonth - 1; i >= 0; i--) {
-      calendarDays.push(daysInLastMonth - i);
-    }
-  
-    // Add days from this month
-    for (let i = 1; i <= daysInMonth; i++) {
-      calendarDays.push(i);
-    }
-  
-    // Add days from next month
-    for (let i = lastDayOfMonth + 1; i <= 6; i++) {
-      calendarDays.push(daysInNextMonth++);
-    }
-  
-    let calendar = document.getElementById('calendar');
-    if (!calendar) {
-      console.error('Could not find element with id "calendar"');
-      return;
-    }
-  
-    let monthElement = calendar.querySelector('.month');
-    if (!monthElement) {
-      console.error('Could not find element with class "month"');
-      return;
-    }
-  
-    let weekdaysElement = calendar.querySelector('.weekdays');
-    if (!weekdaysElement) {
-      console.error('Could not find element with class "weekdays"');
-      return;
-    }
-  
-    let daysElement = calendar.querySelector('.days');
-    if (!daysElement) {
-      console.error('Could not find element with class "days"');
-      return;
-    }
-  
-    monthElement.innerHTML = new Date(year, month).toLocaleString('default', { month: 'long' });
-  
-    weekdaysElement.innerHTML = '';
-    for (let i = 0; i < 7; i++) {
-      weekdaysElement.innerHTML += '<div>' + ['S', 'M', 'T', 'W', 'T', 'F', 'S'][i] + '</div>';
-    }
-  
-    daysElement.innerHTML = '';
-    for (let i = 0; i < calendarDays.length; i++) {
-      let day = calendarDays[i];
-      let className = '';
-      if (day === new Date().getDate() && year === new Date().getFullYear() && month === new Date().getMonth()) {
-        className = 'today';
+function convMtoS(monthNumber) {
+  const date = new Date();
+  date.setMonth(monthNumber);
+  const monthStr = date.toLocaleDateString('default', { month: 'long' });
+  return monthStr;
+}
+
+// Function to generate the calendar
+function generateCalendar() {
+  const closeEditEvents = document.getElementsByClassName('closeEditEvents')[0];
+  const eventEditor = document.getElementsByClassName('editEventsPopup')[0];
+  const editEventButton = document.getElementsByClassName('editEvents')[0];
+  const closeEventButton = document.getElementsByClassName('closeButton')[0];
+  const events = document.getElementsByClassName('events')[0];
+
+  closeEditEvents.addEventListener('click', function () {
+    if (eventEditor instanceof Element) {
+      const editEventDisplay = window.getComputedStyle(eventEditor).getPropertyValue('display');
+      if (editEventDisplay === 'flex') {
+        eventEditor.style.display = 'none';
+      } else {
+        eventEditor.style.display = 'flex';
+        console.log(editEventDisplay);
+        console.log('Events are already hidden');
       }
-      daysElement.innerHTML += '<div class="' + className + '">' + day + '</div>';
+    } else {
+      console.log('eventEditor is not an element');
+    }
+  });
+
+  closeEventButton.addEventListener('click', function () {
+    const eventsDisplay = window.getComputedStyle(events).getPropertyValue('display');
+    if (eventsDisplay === 'flex') {
+      events.style.display = 'none';
+    } else {
+      console.log('Events are already hidden');
+    }
+  });
+  // Get the calendar element
+  const calendar = document.getElementById('calendar');
+
+  // Get the current date
+  const currentDate = new Date();
+
+  // Get the current month and year
+  const currentMonth = currentDate.getMonth();
+  const currentYear = currentDate.getFullYear();
+  const monthStr = convMtoS(currentMonth);
+  document.getElementsByClassName('monthName')[0].innerText = monthStr;
+  document.getElementsByClassName('year')[0].innerText = currentYear;
+
+
+
+  // Get the number of days in the current month
+  const numDays = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+  // Get the first day of the month
+  const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+
+  // Clear the calendar
+  calendar.innerHTML = '';
+
+  // Add the empty boxes for days before the first day of the month
+  for (let i = 0; i < firstDay; i++) {
+    const emptyDay = document.createElement('div');
+    emptyDay.classList.add('day', 'empty-day');
+    calendar.appendChild(emptyDay);
+  }
+
+  // Add the days to the calendar
+  for (let i = 0; i < numDays; i++) {
+    const day = document.createElement('div');
+    day.classList.add('day');
+
+    // Calculate the day number
+    const dayNumber = i + 1;
+
+    day.textContent = dayNumber;
+
+    // Highlight the current day
+    if (
+      dayNumber === currentDate.getDate() &&
+      currentMonth === currentDate.getMonth() &&
+      currentYear === currentDate.getFullYear()
+    ) {
+      day.classList.add('current-day');
+    }
+
+    day.addEventListener('click', function () {
+      const eventsDisplay = window.getComputedStyle(events).getPropertyValue('display');
+      if (eventsDisplay === 'flex') {
+        events.style.display = 'none';
+      } else {
+        events.style.display = 'flex';
+        events.classList.add('events');
+      }
+    });
+
+    editEventButton.addEventListener('click', function () {
+      let localDayNumber;
+      const dayInputField = document.getElementById('editEventDate');
+      console.log('Clicked');
+      const editEventDisplay = window.getComputedStyle(eventEditor).getPropertyValue('display');
+      if (editEventDisplay === 'none') {
+        eventEditor.style.display = 'flex';
+        const eventEditorTitle = document.getElementsByClassName('editEventsTitle')[0];
+        dayInputField.addEventListener('input', function(event) {
+          localDayNumber = event.target.value;
+          if (isNaN(localDayNumber) ) {
+            alert('Please enter a number');
+            dayInputField.value = '';
+            eventEditorTitle.innerText = 'Edit Event';
+          }
+          else if (localDayNumber > numDays) {
+            alert('Please enter a valid day');
+            dayInputField.value = '';
+            eventEditorTitle.innerText = 'Edit Event';
+          } else if (localDayNumber < 1) {
+            alert('Please enter a valid day');
+            dayInputField.value = '';
+            eventEditorTitle.innerText = 'Edit Event';
+          } else {
+            eventEditorTitle.innerText = 'Edit Event for ' + monthStr + ' ' + localDayNumber;
+          }
+        });
+
+        const nameInputField = document.getElementById('editEventName');
+        let nameInputValue = nameInputField.value;
+
+        const hourInputField = document.getElementById('editEventHour');
+        let hourInputValue;
+        hourInputField.addEventListener('input', function(event) {
+          hourInputValue = event.target.value;
+          if (isNaN(hourInputValue) ) {
+            alert('Please enter a number');
+            hourInputField.value = '';
+          }
+          else if (hourInputValue > 12) {
+            alert('Please enter a valid hour');
+            hourInputField.value = '';
+          } else if (hourInputValue < 1) {
+            alert('Please enter a valid hour');
+            hourInputField.value = '';
+          }
+        });
+
+        const minuteInputField = document.getElementById('editEventMinute');
+        let minuteInputValue;
+        minuteInputField.addEventListener('input', function(event) {
+          minuteInputValue = event.target.value;
+          if (isNaN(minuteInputValue) ) {
+            alert('Please enter a number');
+            minuteInputField.value = '';
+          }
+          else if (minuteInputValue > 59) {
+            alert('Please enter a valid minute');
+            minuteInputField.value = '';
+          } else if (minuteInputValue < 0) {
+            alert('Please enter a valid minute');
+            minuteInputField.value = '';
+          }
+        });
+
+        const ampmInputField = document.getElementById('editEventAmPm');
+        let ampmInputValue;
+
+        ampmInputField.addEventListener('input', function(event) {
+          ampmInputValue = event.target.value;
+
+          const blurListener = function(event) {
+            if (ampmInputValue !== 'AM' && ampmInputValue !== 'PM') {
+              if (!ampmInputValue.match(/^[AP]M$/i)) {
+                alert('Please enter either AM or PM');
+              }
+              ampmInputField.value = '';
+            }
+            ampmInputField.removeEventListener('blur', blurListener);
+          };
+
+          ampmInputField.addEventListener('blur', blurListener);
+        });
+
+        const descriptionInputField = document.getElementById('editEventDescription');
+        let descriptionInputValue = descriptionInputField.value;
+        
+        const addEventButton = document.getElementById('addEventButton');
+        addEventButton.addEventListener('click', function() {
+          addEventToLocalStorage(nameInputValue, localDayNumber, hourInputValue, minuteInputValue, ampmInputValue, descriptionInputValue);
+          console.log('Event added');
+        console.log(nameInputValue, localDayNumber, hourInputValue, minuteInputValue, ampmInputValue, descriptionInputValue);
+        });
+      }
+    });
+
+    calendar.appendChild(day);
+  }
+}
+// Generate the calendar when the page loads
+generateCalendar();
+
+function addEventToLocalStorage(eventName, eventDate, eventHour, eventMinute, eventDesc) {
+  const storedEventData = JSON.parse(localStorage.getItem('events')) || {};
+
+  storedEventData[eventName] = {
+    eventDate: eventDate,
+    eventHour: eventHour,
+    eventMinute: eventMinute,
+    eventDesc: eventDesc
+  };
+
+  localStorage.setItem('events', JSON.stringify(storedEventData));
+}
+
+function getEventFromLocalStorage(eventName) {
+  const events = JSON.parse(localStorage.getItem('events'));
+
+  // Find the event with the specified name
+  for (const day in events) {
+    if (events.hasOwnProperty(day)) {
+      const dayEvents = events[day];
+      if (dayEvents.hasOwnProperty(eventName)) {
+        return dayEvents[eventName];
+      }
     }
   }
-  
-  let today = new Date();
-  createCalendar(today.getMonth(), today.getFullYear());
+
+  // Return null if the event is not found
+  return null;
+}
 
 function showFullTime() {
     document.getElementById('fullTimeScreen').style.display = 'block';
@@ -136,47 +299,68 @@ function hideFullTime() {
     document.getElementById('fullTimeScreen').style.display = 'none';
 }
 
-window.addEventListener('load', () => {
-  const ipAddressElement = document.getElementById('ipAddress');
-  getIPAddress()
-    .then(ipAddress => {
-      ipAddressElement.textContent = ipAddress;
-    })
-    .catch(error => {
-      console.error(error);
-      ipAddressElement.textContent = 'Failed to fetch IP address';
-    });
-});
+// window.onerror = function(message, source, lineno, colno, error) {
+//   alert(`Error: ${message}\nSource: ${source}\nLine: ${lineno}\nColumn: ${colno}`);
+// };
 
-function getIPAddress() {
-  return new Promise((resolve, reject) => {
-    const RTCPeerConnection = window.RTCPeerConnection || window.webkitRTCPeerConnection || window.mozRTCPeerConnection;
-    if (!RTCPeerConnection) {
-      reject(new Error('Your browser does not support RTCPeerConnection'));
-    }
+const nextScreen = document.getElementById('nextScreen');
+const homeScreen = document.getElementById('homescreen');
+const fullTimeScreen = document.getElementById('fullTimeScreen');
+const fullScreenTimeCalendar = document.getElementById('fullScreenTimeCalendar');
 
-    const pc = new RTCPeerConnection();
-    pc.createDataChannel('');
-    pc.createOffer()
-      .then(offer => pc.setLocalDescription(offer))
-      .catch(error => reject(error));
-
-    pc.onicecandidate = event => {
-  if (event.candidate) {
-    const ipRegex = /([0-9]{1,3}\.){3}[0-9]{1,3}/;
-    const ipAddressMatch = ipRegex.exec(event.candidate.candidate);
-    if (ipAddressMatch) {
-      const ipAddress = ipAddressMatch[0];
-      resolve(ipAddress);
-      pc.onicecandidate = null;
-    } else {
-      alert('Failed to extract IP address from candidate');
-    }
+nextScreen.addEventListener('click', () => {
+  if (getComputedStyle(homeScreen).display === 'flex' && getComputedStyle(fullTimeScreen).display === 'none' && getComputedStyle(fullScreenTimeCalendar).display === 'none') {
+    showCalendar();
+    console.log('showCalendar');
+  } else if (getComputedStyle(fullScreenTimeCalendar).display === 'block' && getComputedStyle(fullTimeScreen).display === 'none' && getComputedStyle(homeScreen).display === 'none') {
+    showFullTime();
+    console.log('showFullTime');
+  } else if (getComputedStyle(fullTimeScreen).display === 'block' && getComputedStyle(fullScreenTimeCalendar).display === 'none' && getComputedStyle(homeScreen).display === 'none') {
+    showHomescreen();
+    console.log('showHomescreen');
   }
-};
-  });
+    
+  }
+);
+
+window.showCalendar = function() {
+  document.getElementById('fullScreenTimeCalendar').style.display = 'block';
+  hideHomescreen();
 }
 
-window.onerror = function(message, source, lineno, colno, error) {
-  alert(`Error: ${message}\nSource: ${source}\nLine: ${lineno}\nColumn: ${colno}`);
-};
+window.showFullTime = function() {
+  document.getElementById('fullTimeScreen').style.display = 'block';
+  hideHomescreen();
+  hideCalendar();
+}
+
+window.addEventToLocalStorage = function() {
+  const storedEventData = JSON.parse(localStorage.getItem('events')) || {};
+
+  storedEventData[eventName] = {
+    eventDate: eventDate,
+    eventHour: eventHour,
+    eventMinute: eventMinute,
+    eventDesc: eventDesc
+  };
+
+  localStorage.setItem('events', JSON.stringify(storedEventData));
+}
+
+window.getEventFromLocalStorage = function() {
+    const events = JSON.parse(localStorage.getItem('events'));
+  
+    // Find the event with the specified name
+    for (const day in events) {
+      if (events.hasOwnProperty(day)) {
+        const dayEvents = events[day];
+        if (dayEvents.hasOwnProperty(eventName)) {
+          return dayEvents[eventName];
+        }
+      }
+    }
+  
+    // Return null if the event is not found
+    return null;
+  }
+  //TODO: Add event to local storage
